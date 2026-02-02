@@ -178,6 +178,14 @@ def delete_slide(prs, index):
     del prs.slides._sldIdLst[index]
 
 
+def move_slide(prs, old_index, new_index):
+    """Mueve una diapositiva de una posición a otra."""
+    slides = prs.slides._sldIdLst
+    slide = slides[old_index]
+    del slides[old_index]
+    slides.insert(new_index, slide)
+
+
 def main():
     prs = Presentation(TEMPLATE_PPTX)
 

@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
@@ -10,6 +10,7 @@ from typing import List
 from pptx import Presentation
 from copy import deepcopy
 import os
+import io
 
 app = FastAPI(title="SlideGen - PPTX Batch Processor")
 
@@ -18,10 +19,6 @@ templates = Jinja2Templates(directory="templates")
 
 # Montar archivos estáticos
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Crear directorio para archivos generados si no existe
-OUTPUT_DIR = Path("output")
-OUTPUT_DIR.mkdir(exist_ok=True)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -38,101 +35,114 @@ async def process_slides(
     email_results: bool = Form(False)
 ):
     """
-    Procesa el archivo PPTX con la lista de nombres.
-    
-    Args:
-        template: Archivo PPTX de plantilla
-        names: Lista de nombres separados por líneas
-        export_pdf: Si se debe exportar a PDF
-        email_results: Si se deben enviar por email
+    Procesa el archivo PPTX con la lista de nombres y devuelve el archivo directamente.
     """
     # Validar archivo
     if not template.filename.endswith(('.pptx', '.ppt')):
         raise HTTPException(status_code=400, detail="Solo se aceptan archivos .pptx o .ppt")
-    
+
     # Procesar lista de nombres
     names_list = [name.strip() for name in names.split('\n') if name.strip()]
-    
+
     if not names_list:
         raise HTTPException(status_code=400, detail="Debe proporcionar al menos un nombre")
-    
-    # Guardar archivo temporal
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pptx") as tmp_file:
-        shutil.copyfileobj(template.file, tmp_file)
-        tmp_path = tmp_file.name
-    
+
+    # Guardar archivo temporal de entrada
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pptx") as tmp_input:
+        shutil.copyfileobj(template.file, tmp_input)
+        tmp_input_path = tmp_input.name
+
+    # Archivo temporal de salida
+    tmp_output_path = tempfile.mktemp(suffix=".pptx")
+
     try:
         # Procesar la presentación
-        output_path = OUTPUT_DIR / f"processed_{template.filename}"
-        process_presentation(tmp_path, names_list, str(output_path))
-        
-        return {
-            "status": "success",
-            "message": f"Se generaron {len(names_list)} presentaciones",
-            "names_count": len(names_list),
-            "output_file": output_path.name
-        }
-    
+        process_presentation(tmp_input_path, names_list, tmp_output_path)
+
+        # Leer el archivo procesado en memoria
+        with open(tmp_output_path, "rb") as f:
+            file_content = io.BytesIO(f.read())
+
+        # Generar nombre del archivo de salida
+        original_name = template.filename.rsplit('.', 1)[0]
+        output_filename = f"{original_name}_procesado.pptx"
+
+        return StreamingResponse(
+            file_content,
+            media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            headers={
+                "Content-Disposition": f'attachment; filename="{output_filename}"'
+            }
+        )
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error procesando archivo: {str(e)}")
-    
+
     finally:
-        # Limpiar archivo temporal
-        os.unlink(tmp_path)
-
-
-@app.get("/api/download/{filename}")
-async def download_file(filename: str):
-    """Descarga el archivo procesado."""
-    file_path = OUTPUT_DIR / filename
-    
-    if not file_path.exists():
-        raise HTTPException(status_code=404, detail="Archivo no encontrado")
-    
-    return FileResponse(
-        path=file_path,
-        filename=filename,
-        media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation"
-    )
+        # Limpiar archivos temporales
+        if os.path.exists(tmp_input_path):
+            os.unlink(tmp_input_path)
+        if os.path.exists(tmp_output_path):
+            os.unlink(tmp_output_path)
 
 
 def process_presentation(template_path: str, names: List[str], output_path: str):
     """
     Procesa la presentación reemplazando el marcador {{NOMBRE}} con cada nombre.
-    
-    Args:
-        template_path: Ruta al archivo PPTX de plantilla
-        names: Lista de nombres para insertar
-        output_path: Ruta donde guardar el resultado
+    Las slides generadas se insertan justo después de la plantilla original.
     """
     from generar_slides import (
         get_template_slide_indices,
         duplicate_slide_with_images,
         replace_marker_in_slide,
-        delete_slide
+        delete_slide,
+        move_slide
     )
-    
+
     MARKER = "{{NOMBRE}}"
-    
+
     prs = Presentation(template_path)
-    
+
     # Encontrar todas las diapositivas plantilla
     template_indices = get_template_slide_indices(prs, MARKER)
-    
+
     if not template_indices:
         raise ValueError(f"No se encontró el marcador {MARKER} en ninguna diapositiva")
-    
-    # Guardar las slides plantilla originales
-    template_slides = [prs.slides[i] for i in template_indices]
-    
-    # Generar copias para cada nombre
-    for name in names:
-        for template_slide in template_slides:
+
+    # Procesar cada plantilla y sus nombres
+    # Llevamos cuenta del offset porque al insertar slides los índices cambian
+    offset = 0
+
+    for template_idx in template_indices:
+        # Posición actual de la plantilla (considerando inserciones previas)
+        current_template_pos = template_idx + offset
+        template_slide = prs.slides[current_template_pos]
+
+        # Generar copias para cada nombre
+        for i, name in enumerate(names):
+            # Duplicar la slide (se agrega al final)
             new_slide = duplicate_slide_with_images(prs, template_slide)
             replace_marker_in_slide(new_slide, name, MARKER)
-    
-    # Eliminar las diapositivas plantilla originales
-    for i in sorted(template_indices, reverse=True):
+
+            # Mover la slide desde el final a justo después de la plantilla
+            last_index = len(prs.slides) - 1
+            insert_position = current_template_pos + 1 + i
+            move_slide(prs, last_index, insert_position)
+
+        # Actualizar offset para la siguiente plantilla
+        offset += len(names)
+
+    # Eliminar las diapositivas plantilla originales (ahora están en posiciones diferentes)
+    # Calcular las nuevas posiciones de las plantillas
+    templates_to_delete = []
+    current_offset = 0
+    for original_idx in template_indices:
+        new_pos = original_idx + current_offset
+        templates_to_delete.append(new_pos)
+        current_offset += len(names)
+
+    # Eliminar de mayor a menor para no afectar índices
+    for i in sorted(templates_to_delete, reverse=True):
         delete_slide(prs, i)
-    
+
     prs.save(output_path)

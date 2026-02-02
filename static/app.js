@@ -2,14 +2,8 @@
 let uploadedFile = null;
 let namesCount = 0;
 
-// Elementos del DOM
-const uploadArea = document.getElementById('upload-area');
-const fileInput = document.getElementById('file-input');
-const namesTextarea = document.getElementById('names-textarea');
-const namesCounter = document.getElementById('names-counter');
-const processBtn = document.getElementById('process-btn');
-const exportPdfCheckbox = document.getElementById('export-pdf');
-const emailResultsCheckbox = document.getElementById('email-results');
+// Elementos del DOM (se inicializan después de DOMContentLoaded)
+let uploadArea, fileInput, namesTextarea, namesCounter, processBtn;
 
 // Constantes
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -17,6 +11,13 @@ const ALLOWED_FORMATS = ['.pptx', '.ppt'];
 
 // Inicializar eventos
 document.addEventListener('DOMContentLoaded', () => {
+    // Obtener elementos del DOM
+    uploadArea = document.getElementById('upload-area');
+    fileInput = document.getElementById('file-input');
+    namesTextarea = document.getElementById('names-textarea');
+    namesCounter = document.getElementById('names-counter');
+    processBtn = document.getElementById('process-btn');
+
     setupUploadArea();
     setupNamesTextarea();
     setupProcessButton();
@@ -180,31 +181,39 @@ async function processFiles() {
         const formData = new FormData();
         formData.append('template', uploadedFile);
         formData.append('names', namesTextarea.value);
-        formData.append('export_pdf', exportPdfCheckbox.checked);
-        formData.append('email_results', emailResultsCheckbox.checked);
-        
+
         // Enviar solicitud
         const response = await fetch('/api/process', {
             method: 'POST',
             body: formData
         });
-        
+
         if (!response.ok) {
             const error = await response.json();
             throw new Error(error.detail || 'Error procesando archivo');
         }
-        
-        const result = await response.json();
-        
-        // Mostrar resultado exitoso
-        showNotification(
-            `✅ ${result.message}. Descargando archivo...`,
-            'success'
-        );
-        
-        // Descargar archivo
-        window.location.href = `/api/download/${result.output_file}`;
-        
+
+        // Obtener el nombre del archivo del header Content-Disposition
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = 'presentacion_procesada.pptx';
+        if (contentDisposition) {
+            const match = contentDisposition.match(/filename="(.+)"/);
+            if (match) filename = match[1];
+        }
+
+        // Descargar el archivo directamente
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+
+        showNotification(`Archivo "${filename}" descargado correctamente`, 'success');
+
     } catch (error) {
         showNotification(`Error: ${error.message}`, 'error');
     } finally {
