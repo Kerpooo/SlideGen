@@ -1,0 +1,145 @@
+/* Estilos adicionales para SlideGen */
+
+/* Animaciones */
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes pulse-subtle {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.animate-slide-in {
+    animation: slide-in 0.3s ease-out;
+}
+
+.animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+}
+
+.animate-pulse-subtle {
+    animation: pulse-subtle 2s infinite;
+}
+
+/* Estados del formulario */
+input[type="file"] {
+    display: none;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Loading spinner */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Soporte para modo oscuro (opcional) */
+@media (prefers-color-scheme: dark) {
+    /* Los colores se mantienen igual para preservar el diseño neobrutalista */
+}
+
+/* Responsive improvements */
+@media (max-width: 640px) {
+    .text-5xl {
+        font-size: 2rem;
+    }
+    
+    .min-h-\[300px\] {
+        min-height: 200px;
+    }
+}
+
+/* Efectos hover mejorados */
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+/* Soporte para notificaciones */
+.notification {
+    position: fixed;
+    animation: slide-in 0.3s ease-out;
+}
+
+.notification.dismissing {
+    animation: slide-out 0.3s ease-in forwards;
+}
+
+@keyframes slide-out {
+    to {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+}
+
+/* Focus visible para accesibilidad */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid #ff8ba7;
+    outline-offset: 2px;
+}
+
+/* Estilos para archivo cargado */
+.file-loaded {
+    background-color: #c3f0ca !important;
+    border-color: #33272a !important;
+}
+
+/* Progress bar */
+.progress-bar {
+    width: 0%;
+    height: 4px;
+    background-color: #ff8ba7;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Mejoras de legibilidad */
+code {
+    background-color: rgba(51, 39, 42, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', monospace;
+}

@@ -97,37 +97,43 @@ def duplicate_slide_with_images(prs, source_slide):
     return new_slide
 
 
-def replace_marker_runs(shape, name):
+def replace_marker_runs(shape, name, marker=None):
     """
     Reemplaza MARKER dentro de los runs existentes.
     Preserva estilo y posición.
     """
+    if marker is None:
+        marker = MARKER
+    
     tf = shape.text_frame
     changed = False
 
     for p in tf.paragraphs:
         for run in p.runs:
-            if MARKER in run.text:
-                run.text = run.text.replace(MARKER, name)
+            if marker in run.text:
+                run.text = run.text.replace(marker, name)
                 changed = True
 
     return changed
 
 
-def replace_marker_robust(shape, name):
+def replace_marker_robust(shape, name, marker=None):
     """
     Fallback: si el marcador está partido en varios runs,
     reconstruye el texto manteniendo el estilo del primer run.
     """
+    if marker is None:
+        marker = MARKER
+    
     tf = shape.text_frame
     changed = False
 
     for p in tf.paragraphs:
         full = "".join(run.text for run in p.runs)
-        if MARKER not in full:
+        if marker not in full:
             continue
 
-        new_text = full.replace(MARKER, name)
+        new_text = full.replace(marker, name)
 
         if p.runs:
             r0 = p.runs[0]
@@ -142,21 +148,24 @@ def replace_marker_robust(shape, name):
     return changed
 
 
-def replace_marker_in_slide(slide, name):
+def replace_marker_in_slide(slide, name, marker=None):
     """Reemplaza el marcador en todos los shapes de la slide."""
+    if marker is None:
+        marker = MARKER
+    
     found_any = False
 
     for shape in slide.shapes:
         if not shape.has_text_frame:
             continue
-        if replace_marker_runs(shape, name):
+        if replace_marker_runs(shape, name, marker):
             found_any = True
 
     if not found_any:
         for shape in slide.shapes:
             if not shape.has_text_frame:
                 continue
-            if replace_marker_robust(shape, name):
+            if replace_marker_robust(shape, name, marker):
                 found_any = True
 
     return found_any
