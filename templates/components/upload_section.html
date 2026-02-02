@@ -7,7 +7,7 @@
 
     <div class="flex items-center gap-3 mb-6 relative z-10">
         <div class="w-10 h-10 rounded-full bg-[#ffc6c7] border-2 border-[#33272a] flex items-center justify-center font-bold text-lg">1</div>
-        <h2 class="text-xl font-bold">Upload Template</h2>
+        <h2 class="text-xl font-bold">Cargar Plantilla</h2>
     </div>
 
     <input type="file" id="file-input" accept=".pptx,.ppt" class="hidden">
@@ -17,12 +17,12 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"></path>
             </svg>
         </div>
-        <p class="font-bold text-lg mb-2">Click to upload or drag & drop</p>
-        <p class="text-[#594a4e] text-sm max-w-[200px]">Supported formats: .pptx, .ppt (Max 50MB)</p>
+        <p class="font-bold text-lg mb-2">Haz clic para cargar o arrastra y suelta</p>
+        <p class="text-[#594a4e] text-sm max-w-[200px]">Formatos soportados: .pptx, .ppt (Máx 50MB)</p>
         
         <div class="mt-6 flex items-center gap-2">
-            <span class="text-xs font-semibold bg-[#33272a] text-[#fffffe] px-2 py-1 rounded">TIP</span>
-            <span class="text-xs text-[#594a4e]">Use {{name}} placeholder in slides</span>
+            <span class="text-xs font-semibold bg-[#33272a] text-[#fffffe] px-2 py-1 rounded">CONSEJO</span>
+            <span class="text-xs text-[#594a4e]">Usa el marcador {{NOMBRE}} en las diapositivas</span>
         </div>
     </div>
 </div>
@@ -32,9 +32,9 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
     </svg>
     <div>
-        <h3 class="font-bold text-sm mb-1">How placeholders work</h3>
+        <h3 class="font-bold text-sm mb-1">Cómo funcionan los marcadores</h3>
         <p class="text-sm text-[#33272a]/80 leading-relaxed">
-            Ensure your PowerPoint text boxes contain <code>{{name}}</code> where you want the recipient's name to appear. We'll replace it automatically.
+            Asegúrate de que tus cuadros de texto de PowerPoint contengan <code>{{NOMBRE}}</code> donde quieras que aparezca el nombre del destinatario. Lo reemplazaremos automáticamente.
         </p>
     </div>
 </div>

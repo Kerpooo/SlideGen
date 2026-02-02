@@ -98,7 +98,7 @@ async def download_file(filename: str):
 
 def process_presentation(template_path: str, names: List[str], output_path: str):
     """
-    Procesa la presentación reemplazando el marcador {{name}} con cada nombre.
+    Procesa la presentación reemplazando el marcador {{NOMBRE}} con cada nombre.
     
     Args:
         template_path: Ruta al archivo PPTX de plantilla
@@ -112,7 +112,7 @@ def process_presentation(template_path: str, names: List[str], output_path: str)
         delete_slide
     )
     
-    MARKER = "{{name}}"
+    MARKER = "{{NOMBRE}}"
     
     prs = Presentation(template_path)
     

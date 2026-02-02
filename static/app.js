@@ -36,16 +36,23 @@ function setupKeyboardShortcuts() {
 // Configurar área de carga
 function setupUploadArea() {
     // Click para abrir selector de archivo
-    uploadArea.addEventListener('click', () => fileInput.click());
+    uploadArea.addEventListener('click', () => {
+        // Si hay un archivo cargado, permitir cambiar
+        fileInput.click();
+    });
     
     // Drag and drop
     uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
-        uploadArea.classList.add('border-[#33272a]', 'bg-[#faeee7]');
+        uploadArea.classList.add('border-[#33272a]', 'bg-[#faeee7]', '!border-solid');
+        uploadArea.classList.remove('border-[#33272a]/30');
     });
     
     uploadArea.addEventListener('dragleave', () => {
-        uploadArea.classList.remove('border-[#33272a]', 'bg-[#faeee7]');
+        if (!uploadedFile) {
+            uploadArea.classList.remove('border-[#33272a]', 'bg-[#faeee7]', '!border-solid');
+            uploadArea.classList.add('border-[#33272a]/30');
+        }
     });
     
     uploadArea.addEventListener('drop', (e) => {
@@ -84,22 +91,47 @@ function handleFileSelect(file) {
     }
     
     uploadedFile = file;
-    updateUploadUI(file.name);
+    updateUploadUI(file.name, file.size);
     showNotification(`Archivo "${file.name}" cargado correctamente`, 'success');
 }
 
+// Formatear tamaño de archivo
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+}
+
 // Actualizar UI del área de carga
-function updateUploadUI(fileName) {
-    const uploadContent = uploadArea.querySelector('.flex.flex-col');
-    uploadContent.innerHTML = `
-        <div class="w-16 h-16 bg-[#c3f0ca] rounded-full border-2 border-[#33272a] flex items-center justify-center mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="#33272a" class="w-8 h-8">
+function updateUploadUI(fileName, fileSize) {
+    // Cambiar el borde y fondo del área completa
+    uploadArea.classList.remove('border-[#33272a]/30', 'bg-[#faeee7]/30', 'border-dashed');
+    uploadArea.classList.add('border-[#c3f0ca]', 'bg-[#c3f0ca]/20', 'border-solid');
+
+    const formattedSize = formatFileSize(fileSize);
+
+    // Actualizar directamente el contenido del upload-area
+    uploadArea.innerHTML = `
+        <div class="w-20 h-20 bg-[#c3f0ca] rounded-full border-4 border-[#33272a] flex items-center justify-center mb-4 shadow-lg animate-bounce">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="#33272a" class="w-10 h-10">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"></path>
             </svg>
         </div>
-        <p class="font-bold text-lg mb-2">${fileName}</p>
-        <p class="text-[#594a4e] text-sm">Click para cambiar archivo</p>
+        <div class="bg-[#33272a] text-[#fffffe] px-4 py-2 rounded-lg mb-3 font-bold text-sm">
+            ARCHIVO CARGADO
+        </div>
+        <p class="font-bold text-xl mb-1 text-[#33272a]">${fileName}</p>
+        <p class="text-[#594a4e] font-semibold mb-4">${formattedSize}</p>
+        <button class="text-xs font-semibold bg-[#33272a] text-[#fffffe] px-4 py-2 rounded-lg hover:bg-[#594a4e] transition-colors">
+            Cambiar archivo
+        </button>
     `;
+
+    // Agregar animación de entrada
+    uploadArea.style.animation = 'none';
+    setTimeout(() => {
+        uploadArea.style.animation = 'pulse 0.5s ease-out';
+    }, 10);
 }
 
 // Configurar textarea de nombres
@@ -179,7 +211,7 @@ async function processFiles() {
         // Rehabilitar botón
         processBtn.disabled = false;
         processBtn.innerHTML = `
-            <span>Process Files</span>
+            <span>Procesar Archivos</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6 group-hover:translate-x-1 transition-transform">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
             </svg>
