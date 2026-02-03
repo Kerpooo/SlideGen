@@ -1,5 +1,5 @@
 [project]
-name = "slicedcarrots"
+name = "slidegen"
 version = "0.1.0"
 description = "Generador de presentaciones PPTX personalizadas en batch"
 requires-python = ">=3.12"
@@ -17,13 +17,6 @@ dependencies = [
     "rich>=14.3.2",
     "python-multipart>=0.0.22",
 ]
-
-[project.scripts]
-slidegen = "run:main"
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 [tool.uv]
 managed = true
