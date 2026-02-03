@@ -1,26 +1,24 @@
 <nav class="w-full border-b-2 border-[#33272a] bg-[#fffffe] px-4 md:px-6 py-4">
 	<div class="max-w-7xl mx-auto flex justify-between items-center">
 		<div class="flex items-center gap-2">
-			<div
-				class="w-8 h-8 bg-[#ff8ba7] rounded-full border-2 border-[#33272a] flex items-center justify-center">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="2.5"
-					stroke="#33272a"
-					class="w-5 h-5">
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-				</svg>
-			</div>
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SlideGen logo" class="w-8 h-8">
+				<!-- Background -->
+				<rect x="6" y="6" width="52" height="52" rx="14" fill="#faeee7"/>
+				<!-- Slide outline -->
+				<rect x="18" y="18" width="28" height="22" rx="4" fill="#fffffe" stroke="#33272a" stroke-width="2.8"/>
+				<!-- Slide text lines -->
+				<line x1="22" y1="26" x2="42" y2="26" stroke="#33272a" stroke-width="2.8" stroke-linecap="round"/>
+				<line x1="22" y1="33" x2="36" y2="33" stroke="#594a4e" stroke-width="2.8" stroke-linecap="round"/>
+				<!-- Highlight spark (generation) -->
+				<path d="M48 20l1.6 4.2L54 26l-4.4 1.8L48 32l-1.6-4.2L42 26l4.4-1.8L48 20z" fill="#ff8ba7"/>
+				<!-- Accent dot -->
+				<circle cx="46" cy="38" r="2.4" fill="#c3f0ca"/>
+			</svg>
 			<span class="text-xl font-bold tracking-tight">SlideGen</span>
 		</div>
 
 		<!-- Desktop menu -->
-		<div class="hidden md:flex gap-4">
+		<!-- <div class="hidden md:flex gap-4">
 			<button
 				class="text-[#594a4e] font-medium hover:text-[#33272a] transition-colors">
 				Documentación
@@ -29,18 +27,18 @@
 				class="text-[#594a4e] font-medium hover:text-[#33272a] transition-colors">
 				Plantillas
 			</button>
-		</div>
+		</div> -->
 
 		<!-- Mobile menu button -->
-		<button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-[#faeee7] rounded-lg transition-colors">
+		<!-- <button id="mobile-menu-btn" class="md:hidden p-2 hover:bg-[#faeee7] rounded-lg transition-colors">
 			<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#33272a" class="w-6 h-6">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
 			</svg>
-		</button>
+		</button> -->
 	</div>
 
 	<!-- Mobile menu -->
-	<div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-[#33272a]/10">
+	<!-- <div id="mobile-menu" class="hidden md:hidden mt-4 pt-4 border-t border-[#33272a]/10">
 		<div class="flex flex-col gap-2">
 			<button class="text-left text-[#594a4e] font-medium hover:text-[#33272a] hover:bg-[#faeee7] px-3 py-2 rounded-lg transition-colors">
 				Documentación
@@ -49,5 +47,5 @@
 				Plantillas
 			</button>
 		</div>
-	</div>
+	</div> -->
 </nav>

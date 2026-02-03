@@ -1,31 +1,44 @@
-<div class="bg-[#fffffe] border-2 border-[#33272a] rounded-2xl p-4 sm:p-6 neobrutal-shadow h-full flex flex-col">
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#c3f0ca] border-2 border-[#33272a] flex items-center justify-center font-bold text-base sm:text-lg">2</div>
-            <h2 class="text-lg sm:text-xl font-bold">Lista de Destinatarios</h2>
-        </div>
-        <div class="flex gap-2">
-            <button id="import-csv-btn" class="text-xs font-bold px-3 py-1.5 rounded-lg border-2 border-[#33272a] hover:bg-[#faeee7] transition-colors flex-1 sm:flex-none">
+<div
+	class="bg-[#fffffe] border-2 border-[#33272a] rounded-2xl p-4 sm:p-6 neobrutal-shadow h-full flex flex-col">
+	<div
+		class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0 mb-4 sm:mb-6">
+		<div class="flex items-center gap-3">
+			<div
+				class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#c3f0ca] border-2 border-[#33272a] flex items-center justify-center font-bold text-base sm:text-lg">
+				2
+			</div>
+			<h2 class="text-lg sm:text-xl font-bold">Lista de Destinatarios</h2>
+		</div>
+		<div class="flex gap-2">
+			<!-- <button id="import-csv-btn" class="text-xs font-bold px-3 py-1.5 rounded-lg border-2 border-[#33272a] hover:bg-[#faeee7] transition-colors flex-1 sm:flex-none">
                 Importar CSV
-            </button>
-            <button id="clear-list-btn" class="text-xs font-bold px-3 py-1.5 rounded-lg border-2 border-[#33272a] hover:bg-[#faeee7] transition-colors flex-1 sm:flex-none">
-                Limpiar Lista
-            </button>
-        </div>
-    </div>
+            </button> -->
+			<button
+				id="clear-list-btn"
+				class="text-xs font-bold px-3 py-1.5 rounded-lg border-2 border-[#33272a] hover:bg-[#faeee7] transition-colors flex-1 sm:flex-none">
+				Limpiar Lista
+			</button>
+		</div>
+	</div>
 
-    <div class="flex-grow flex flex-col gap-2">
-        <label class="text-sm font-bold text-[#594a4e] ml-1">Ingresa los nombres (uno por línea)</label>
-        <div class="relative flex-grow">
-            <textarea id="names-textarea" class="w-full h-full min-h-[250px] sm:min-h-[300px] p-3 sm:p-4 bg-[#fffffe] border-2 border-[#33272a] rounded-xl resize-none focus:outline-none focus:ring-4 focus:ring-[#ff8ba7]/30 text-base sm:text-lg font-medium leading-relaxed placeholder:text-[#33272a]/30" placeholder="Alice Freeman
+	<div class="flex-grow flex flex-col gap-2">
+		<label class="text-sm font-bold text-[#594a4e] ml-1"
+			>Ingresa los nombres (uno por línea)</label
+		>
+		<div class="relative flex-grow">
+			<textarea
+				id="names-textarea"
+				class="w-full h-full min-h-[250px] sm:min-h-[300px] p-3 sm:p-4 bg-[#fffffe] border-2 border-[#33272a] rounded-xl resize-none focus:outline-none focus:ring-4 focus:ring-[#ff8ba7]/30 text-base sm:text-lg font-medium leading-relaxed placeholder:text-[#33272a]/30"
+				placeholder="Alice Freeman
 Bob Smith
 Charlie Davis
 Diana Prince
 Evan Wright"></textarea>
 
-            <div class="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 bg-[#faeee7] px-2 sm:px-3 py-1 rounded-md border-2 border-[#33272a] text-xs font-bold">
-                <span id="names-counter">0 nombres</span>
-            </div>
-        </div>
-    </div>
+			<div
+				class="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 bg-[#faeee7] px-2 sm:px-3 py-1 rounded-md border-2 border-[#33272a] text-xs font-bold">
+				<span id="names-counter">0 nombres</span>
+			</div>
+		</div>
+	</div>
 </div>
