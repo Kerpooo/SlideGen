@@ -22,7 +22,27 @@ document.addEventListener('DOMContentLoaded', () => {
     setupNamesTextarea();
     setupProcessButton();
     setupKeyboardShortcuts();
+    setupMobileMenu();
 });
+
+// Configurar menú móvil
+function setupMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Cerrar menú al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    }
+}
 
 // Configurar accesos de teclado
 function setupKeyboardShortcuts() {

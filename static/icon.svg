@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="SlideGen logo">
+  <!-- Background -->
+  <rect x="6" y="6" width="52" height="52" rx="14" fill="#faeee7"/>
+
+  <!-- Slide outline -->
+  <rect
+    x="18"
+    y="18"
+    width="28"
+    height="22"
+    rx="4"
+    fill="#fffffe"
+    stroke="#33272a"
+    stroke-width="2.8"
+  />
+
+  <!-- Slide text lines -->
+  <line
+    x1="22"
+    y1="26"
+    x2="42"
+    y2="26"
+    stroke="#33272a"
+    stroke-width="2.8"
+    stroke-linecap="round"
+  />
+  <line
+    x1="22"
+    y1="33"
+    x2="36"
+    y2="33"
+    stroke="#594a4e"
+    stroke-width="2.8"
+    stroke-linecap="round"
+  />
+
+  <!-- Highlight spark (generation) -->
+  <path
+    d="M48 20l1.6 4.2L54 26l-4.4 1.8L48 32l-1.6-4.2L42 26l4.4-1.8L48 20z"
+    fill="#ff8ba7"
+  />
+
+  <!-- Accent dot -->
+  <circle cx="46" cy="38" r="2.4" fill="#c3f0ca"/>
+</svg>

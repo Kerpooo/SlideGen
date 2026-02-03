@@ -147,3 +147,11 @@ Verifica que tu plantilla original tenga las imágenes correctamente embebidas (
 ## 📄 Licencia
 
 MIT
+
+
+## Deploys
+cd /var/www/SlideGen
+git pull
+uv sync
+sudo systemctl restart slidegen
+sudo systemctl reload nginx
