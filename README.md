@@ -153,5 +153,6 @@ MIT
 cd /var/www/SlideGen
 git pull
 uv sync
+bun run build:css
 sudo systemctl restart slidegen
 sudo systemctl reload nginx

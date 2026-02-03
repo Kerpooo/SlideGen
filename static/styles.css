@@ -1,3 +1,5 @@
+@import "tailwindcss";
+/* @source "../templates";  -- removed: unknown at-rule in CSS */
 
 @keyframes pulse {
     0% {
