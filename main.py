@@ -11,6 +11,7 @@ from pptx import Presentation
 from copy import deepcopy
 import os
 import io
+import hashlib
 
 app = FastAPI(title="SlideGen - PPTX Batch Processor")
 
@@ -19,6 +20,18 @@ templates = Jinja2Templates(directory="templates")
 
 # Montar archivos estáticos
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+def static_url(filename: str) -> str:
+    """Genera URL estática con hash para cache busting."""
+    file_path = Path("static") / filename
+    if file_path.exists():
+        content_hash = hashlib.md5(file_path.read_bytes()).hexdigest()[:8]
+        return f"/static/{filename}?v={content_hash}"
+    return f"/static/{filename}"
+
+
+templates.env.globals["static_url"] = static_url
 
 
 @app.get("/", response_class=HTMLResponse)
