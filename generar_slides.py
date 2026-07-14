@@ -1,5 +1,6 @@
 from pptx import Presentation
 from copy import deepcopy
+import unicodedata
 
 # ---------------- CONFIG ----------------
 TEMPLATE_PPTX = "plantilla.pptx"
@@ -191,7 +192,7 @@ def main():
 
     # Leer nombres
     with open(NAMES_FILE, "r", encoding="utf-8") as f:
-        names = [line.strip() for line in f if line.strip()]
+        names = [unicodedata.normalize("NFC", line.strip()) for line in f if line.strip()]
 
     # Encontrar todas las diapositivas plantilla (las que tienen el marcador)
     template_indices = get_template_slide_indices(prs, MARKER)
