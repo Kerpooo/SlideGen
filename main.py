@@ -12,6 +12,7 @@ from copy import deepcopy
 import os
 import io
 import hashlib
+import unicodedata
 
 app = FastAPI(title="SlideGen - PPTX Batch Processor")
 
@@ -55,8 +56,8 @@ async def process_slides(
         raise HTTPException(status_code=400, detail="Solo se aceptan archivos .pptx o .ppt")
 
     # Procesar lista de nombres
-    names_list = [name.strip() for name in names.split('\n') if name.strip()]
-
+    names_list = [unicodedata.normalize("NFC", name.strip()) for name in names.split('\n') if name.strip()]
+    
     if not names_list:
         raise HTTPException(status_code=400, detail="Debe proporcionar al menos un nombre")
 
